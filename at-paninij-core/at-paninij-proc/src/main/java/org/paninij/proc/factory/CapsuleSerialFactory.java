@@ -155,8 +155,6 @@ public class CapsuleSerialFactory extends CapsuleProfileFactory
         case BLOCKED_PREMADE:
             encap.add("return " + call + ";");
             return encap;
-        case ERROR:
-            break;
         case UNBLOCKED_FUTURE:
             argNames.add(0, "-1");
             args = String.join(", ", argNames);
@@ -174,10 +172,10 @@ public class CapsuleSerialFactory extends CapsuleProfileFactory
         case UNBLOCKED_SIMPLE:
             encap.add(call + ";");
             return encap;
+        case ERROR:
         default:
-            break;
+            throw new IllegalArgumentException("Bad MessageShape behavior");
         }
-        return encap;
     }
 
     private List<String> generateProcedures()
