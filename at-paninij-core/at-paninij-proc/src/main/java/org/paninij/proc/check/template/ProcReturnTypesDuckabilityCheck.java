@@ -37,8 +37,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 
-import org.paninij.lang.Block;
-import org.paninij.lang.Future;
+import org.paninij.lang.Duck;
 import org.paninij.proc.check.CheckEnvironment;
 import org.paninij.proc.check.Result;
 import org.paninij.proc.check.Result.Error;
@@ -59,8 +58,8 @@ public class ProcReturnTypesDuckabilityCheck extends AbstractTemplateCheck
     @Override
     protected Result checkTemplate(TemplateKind templateKind, TypeElement template)
     {
-        // Iterate over all methods, and for those which are `@Duck` procedures (either explicitly
-        // or implicitly), check their return type's duckability.
+        // Iterate over all methods, and for those which are `@Duck` procedures
+        // check their return type's duckability.
         for (Element elem : template.getEnclosedElements()) {
             if (isDuckProcedure(elem)) {
                 Result result = checker.check(((ExecutableElement) elem).getReturnType());
@@ -80,8 +79,7 @@ public class ProcReturnTypesDuckabilityCheck extends AbstractTemplateCheck
         String name = member.getSimpleName().toString();
         return member.getKind() == METHOD
             && !isDeclName(name)
-            && !hasAnnotation(member, Future.class)
-            && !hasAnnotation(member, Block.class);
+            && hasAnnotation(member, Duck.class);
     }
     
     private static boolean isDeclName(String name) {

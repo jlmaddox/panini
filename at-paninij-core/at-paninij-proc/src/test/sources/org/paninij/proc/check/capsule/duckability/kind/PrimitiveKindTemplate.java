@@ -26,11 +26,12 @@
 package org.paninij.proc.check.capsule.duckability.kind;
 
 import org.paninij.lang.Capsule;
+import org.paninij.lang.Duck;
 
 @Capsule
 public class PrimitiveKindTemplate
 {
-    public int objectArr() {
+    @Duck public int objectArr() {
         return 0;
     } 
 }

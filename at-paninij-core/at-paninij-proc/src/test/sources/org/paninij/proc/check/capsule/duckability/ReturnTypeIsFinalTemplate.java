@@ -26,11 +26,12 @@
 package org.paninij.proc.check.capsule.duckability;
 
 import org.paninij.lang.Capsule;
+import org.paninij.lang.Duck;
 
 @Capsule
 public class ReturnTypeIsFinalTemplate
 {
-    public java.lang.String proc()
+    @Duck public String proc()
     {
         // Nothing else needed.
         return null;

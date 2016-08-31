@@ -27,11 +27,12 @@ package org.paninij.proc.check.capsule.duckability;
 
 import org.paninij.lang.Capsule;
 import org.paninij.proc.check.duckability.Point;
+import org.paninij.lang.Duck;
 
 @Capsule
 public class ReturnTypeHasExposedFieldsTemplate
 {
-    public Point proc() {
+    @Duck public Point proc() {
         return null;
     }
 }

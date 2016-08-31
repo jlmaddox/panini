@@ -57,8 +57,6 @@ public class DuckabilityChecker implements Check
     public Result check(TypeMirror toDuck)
     {
         switch (toDuck.getKind()) {
-        case VOID:
-            return ok;
         case DECLARED:
             return checkDeclared(toDuck);
         default:
