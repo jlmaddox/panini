@@ -27,11 +27,12 @@ package org.paninij.proc.check.capsule.duckability;
 
 import org.paninij.lang.Capsule;
 import org.paninij.proc.check.duckability.ClassWithFinalMethod;
+import org.paninij.lang.Duck;
 
 @Capsule
 public class ReturnTypeHasFinalMethodTemplate
 {
-    public ClassWithFinalMethod proc()
+    @Duck public ClassWithFinalMethod proc()
     {
         // Nothing else needed.
         return null;
