@@ -100,7 +100,7 @@ public enum Behavior
             duckable = 2;
             break;
         default:
-            return Behavior.ERROR;
+            throw new RuntimeException("Bad duckability value.");
         }
 
         switch (returnType.getCategory()) {
@@ -114,7 +114,7 @@ public enum Behavior
             category = 2;
             break;
         default:
-            return Behavior.ERROR;
+            throw new RuntimeException("Bad category value.");
         }
 
         switch (procedure.getAnnotationKind()) {
@@ -131,7 +131,7 @@ public enum Behavior
             annotation = 3;
             break;
         default:
-            return Behavior.ERROR;
+            throw new RuntimeException("Bad annotation kind value.");
         }
 
         return Behavior.table[duckable][category][annotation];
