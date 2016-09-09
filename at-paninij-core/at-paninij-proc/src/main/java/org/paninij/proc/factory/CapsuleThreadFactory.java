@@ -391,7 +391,9 @@ public class CapsuleThreadFactory extends CapsuleProfileFactory
         List<String> src = new ArrayList<String>();
 
         src.add(this.generateEncapsulatedDecl());
+        src.addAll(this.generateEventFields());
         src.addAll(this.generateProcedureIDs());
+        src.addAll(this.generateConstructor());
         src.addAll(this.generateProcedures());
         src.addAll(this.generateCheckRequiredFields());
         src.addAll(this.generateExport());

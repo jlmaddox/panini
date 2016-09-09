@@ -49,6 +49,7 @@ public class CapsuleElement implements Capsule
     private ArrayList<Procedure> procedures;
     private ArrayList<Variable> localFields;
     private ArrayList<Variable> importFields;
+    private ArrayList<Variable> eventFields;
     private ArrayList<Variable> state;
 
     private Set<String> imports;
@@ -75,6 +76,7 @@ public class CapsuleElement implements Capsule
         this.element = null;
         this.procedures = new ArrayList<Procedure>();
         this.localFields = new ArrayList<Variable>();
+        this.eventFields = new ArrayList<Variable>();
         this.importFields = new ArrayList<Variable>();
         this.state = new ArrayList<Variable>();
         this.imports = new HashSet<String>();
@@ -94,6 +96,11 @@ public class CapsuleElement implements Capsule
     }
 
     @Override
+    public List<Variable> getEventFields() {
+        return new ArrayList<Variable>(this.eventFields);
+    }
+    
+    @Override
     public List<Variable> getStateFields() {
         return new ArrayList<Variable>(this.state);
     }
@@ -104,6 +111,10 @@ public class CapsuleElement implements Capsule
 
     public void addImportDecl(Variable v) {
         this.importFields.add(v);
+    }
+    
+    public void addEvent(Variable v) {
+    	this.eventFields.add(v);
     }
 
     public void addState(Variable v) {
