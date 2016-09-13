@@ -18,10 +18,11 @@
  * http://paninij.org
  *
  * Contributors:
- * 	Dr. Hridesh Rajan,
- * 	Dalton Mills,
- * 	David Johnston,
- * 	Trey Erenberger
+ *  Dr. Hridesh Rajan,
+ *  Dalton Mills,
+ *  David Johnston,
+ *  Trey Erenberger
+ *  Jackson Maddox
  *******************************************************************************/
 package org.paninij.proc.factory;
 
@@ -136,46 +137,65 @@ public abstract class CapsuleProfileFactory extends AbstractCapsuleFactory
     }
 
     protected List<String> generateEventFields() {
-    	List<String> list = new ArrayList<String>();
-    	
-    	for (Variable v : capsule.getEventFields()) {
-    		list.add(Source.format(
-    				"public final #0 #1;",
-    				v.getMirror().toString(), 
-    				v.getIdentifier()));
-    	}
-    	
-    	return list;
+        List<String> list = new ArrayList<String>();
+
+        for (Variable v : capsule.getEventFields()) {
+            list.add(Source.format(
+                    "private final #0 #1;",
+                    v.getMirror().toString(), 
+                    v.getIdentifier()));
+        }
+        list.add("");
+
+        return list;
     }
     
-    protected List<String> generateConstructor() {
-    	List<String> list = new ArrayList<String>();
-    	
-    	list.add(Source.format(
-    			"public #0() {", 
-    			generateClassName()));
-    	
-    	int i = 0;
-    	for (Variable v : capsule.getEventFields()) {
-    		// First line below results in ugly generated code. 
-    		// Need to extract simple name of the enclosed generic type
+    protected List<String> generateEventMethods() {
+        List<String> list = new ArrayList<String>();
+
+        for (Variable v : capsule.getEventFields()) {
             List<String> source = Source.lines(
-                    "    #2 event#0 = new PaniniEvent<>();", 
-                    "    panini$encapsulated.#1 = event#0;",
-                    "    this.#1 = event#0;",
+                    "@Override",
+                    "public #0 #1Event() {",
+                    "    return this.#1;",
+                    "}",
                     "");
-            
+
             list.addAll(Source.formatAll(source,
+                    v.raw(),
+                    v.getIdentifier()));
+        }
+
+        return list;
+    }
+
+    protected List<String> generateConstructor() {
+        List<String> list = new ArrayList<String>();
+
+        list.add(Source.format(
+                "public #0() {", 
+                generateClassName()));
+
+        int i = 0;
+        for (Variable v : capsule.getEventFields()) {
+            List<String> source = Source.lines(
+                    "    #0 event#1 = new PaniniEvent<>();", 
+                    "    panini$encapsulated.#2 = event#1;",
+                    "    this.#2 = event#1;",
+                    "");
+
+            list.addAll(Source.formatAll(source,
+                    v.raw(),
                     i,
-                    v.getIdentifier(),
-                    v.raw()));
-            
+                    v.getIdentifier()));
+
             i++;
-    	}
-    	
-    	list.add("}");
-    	
-    	return list;
+        }
+
+        list.add("}");
+        list.add("");
+
+        return list;
     }
     
     protected String generateAssertSafeInvocationTransfer()
@@ -265,16 +285,16 @@ public abstract class CapsuleProfileFactory extends AbstractCapsuleFactory
 
     protected List<String> generateGetAllState()
     {
-    	List<String> states = new ArrayList<String>();
-    	
-    	for(Variable field : capsule.getStateFields())
-    	{
-    		if(field.getKind() == TypeKind.ARRAY || field.getKind() == TypeKind.DECLARED)
-    		{
-    			states.add("panini$encapsulated." + field.getIdentifier());
-    		}
-    	}
-    	
+        List<String> states = new ArrayList<String>();
+        
+        for(Variable field : capsule.getStateFields())
+        {
+            if(field.getKind() == TypeKind.ARRAY || field.getKind() == TypeKind.DECLARED)
+            {
+                states.add("panini$encapsulated." + field.getIdentifier());
+            }
+        }
+        
         List<String> src = Source.lines("@Override",
                                         "public Object panini$getAllState()",
                                         "{",

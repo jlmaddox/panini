@@ -18,10 +18,11 @@
  * http://paninij.org
  *
  * Contributors:
- * 	Dr. Hridesh Rajan,
- * 	Dalton Mills,
- * 	David Johnston,
- * 	Trey Erenberger
+ *  Dr. Hridesh Rajan,
+ *  Dalton Mills,
+ *  David Johnston,
+ *  Trey Erenberger
+ *  Jackson Maddox
  *******************************************************************************/
 
 package org.paninij.proc.factory;
@@ -60,6 +61,7 @@ public class CapsuleInterfaceFactory extends AbstractCapsuleFactory
                 "{",
                 "    #4",
                 "    ##",
+                "    ##",
                 "}");
 
         src = Source.format(src,
@@ -71,6 +73,7 @@ public class CapsuleInterfaceFactory extends AbstractCapsuleFactory
 
         src = Source.formatAligned(src, this.generateImports());
         src = Source.formatAligned(src, this.generateFacades());
+        src = Source.formatAligned(src, this.generateEventFacades());
 
         return src;
     }
@@ -153,5 +156,16 @@ public class CapsuleInterfaceFactory extends AbstractCapsuleFactory
                 shape.kindAnnotation);
 
         return declaration;
+    }
+    
+    protected List<String> generateEventFacades() {
+        List<String> facades = new ArrayList<>();
+
+        for (Variable v : capsule.getEventFields()) {
+            facades.add(Source.format("public #0 #1Event();",
+                    v.raw(),
+                    v.getIdentifier()));
+        }
+        return facades;
     }
 }

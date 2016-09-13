@@ -58,7 +58,9 @@ public class CapsuleFactory
         
     	capsuleInterface = (Class<Panini$Capsule>) clazz;
         
-        capsuleMockup  = (Class<Capsule$Mockup>)  Class.forName(clazz.getName() + "$Mockup", true, loader);
+        //capsuleMockup  = (Class<Capsule$Mockup>)  Class.forName(clazz.getName() + "$Mockup", true, loader);
+        capsuleMockup  = null;
+        // CapsuleMockupFactory is not currently used and conflicts with the event implementation
         capsuleMonitor = (Class<Capsule$Monitor>) Class.forName(clazz.getName() + "$Monitor",true, loader);
         capsuleSerial  = (Class<Capsule$Serial>)  Class.forName(clazz.getName() + "$Serial", true, loader);
         capsuleTask    = (Class<Capsule$Task>)    Class.forName(clazz.getName() + "$Task",   true, loader);

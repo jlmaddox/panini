@@ -316,6 +316,11 @@ public class CapsuleMonitorFactory extends CapsuleProfileFactory
         List<String> src = new ArrayList<String>();
 
         src.add(this.generateEncapsulatedDecl());
+        
+        src.addAll(this.generateEventFields());
+        src.addAll(this.generateConstructor());
+        src.addAll(this.generateEventMethods());
+        
         src.addAll(this.generateProcedures());
         src.addAll(this.generateCheckRequiredFields());
         src.addAll(this.generateExport());

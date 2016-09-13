@@ -404,6 +404,11 @@ public class CapsuleTaskFactory extends CapsuleProfileFactory
 
         src.add(this.generateEncapsulatedDecl());
         src.addAll(this.generateProcedureIDs());
+        
+        src.addAll(this.generateEventFields());
+        src.addAll(this.generateConstructor());
+        src.addAll(this.generateEventMethods());
+        
         src.addAll(this.generateProcedures());
         src.addAll(this.generateCheckRequiredFields());
         src.addAll(this.generateExport());
