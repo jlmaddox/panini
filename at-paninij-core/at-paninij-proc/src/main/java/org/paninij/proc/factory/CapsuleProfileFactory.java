@@ -139,13 +139,13 @@ public abstract class CapsuleProfileFactory extends AbstractCapsuleFactory
     protected List<String> generateEventFields() {
         List<String> list = new ArrayList<String>();
 
-        for (Variable v : capsule.getEventFields()) {
+        /*for (Variable v : capsule.getEventFields()) {
             list.add(Source.format(
                     "private final #0 #1;",
                     v.getMirror().toString(), 
                     v.getIdentifier()));
         }
-        list.add("");
+        list.add("");*/
 
         return list;
     }
@@ -156,8 +156,8 @@ public abstract class CapsuleProfileFactory extends AbstractCapsuleFactory
         for (Variable v : capsule.getEventFields()) {
             List<String> source = Source.lines(
                     "@Override",
-                    "public #0 #1Event() {",
-                    "    return this.#1;",
+                    "public #0 #1() {",
+                    "    return panini$encapsulated.#1;",
                     "}",
                     "");
 
@@ -179,9 +179,10 @@ public abstract class CapsuleProfileFactory extends AbstractCapsuleFactory
         int i = 0;
         for (Variable v : capsule.getEventFields()) {
             List<String> source = Source.lines(
-                    "    #0 event#1 = new PaniniEvent<>();", 
-                    "    panini$encapsulated.#2 = event#1;",
-                    "    this.#2 = event#1;",
+                    //"    #0 event#1 = new PaniniEvent<>();", 
+                    //"    panini$encapsulated.#2 = event#1;",
+                    //"    this.#2 = event#1;",
+                    "    panini$encapsulated.#2 = new PaniniEvent<>();",
                     "");
 
             list.addAll(Source.formatAll(source,

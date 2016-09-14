@@ -162,7 +162,7 @@ public class CapsuleInterfaceFactory extends AbstractCapsuleFactory
         List<String> facades = new ArrayList<>();
 
         for (Variable v : capsule.getEventFields()) {
-            facades.add(Source.format("public #0 #1Event();",
+            facades.add(Source.format("public #0 #1();",
                     v.raw(),
                     v.getIdentifier()));
         }
