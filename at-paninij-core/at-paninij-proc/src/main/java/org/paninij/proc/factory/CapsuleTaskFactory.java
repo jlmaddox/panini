@@ -178,7 +178,7 @@ public class CapsuleTaskFactory extends CapsuleProfileFactory
         List<Variable> locals = this.capsule.getLocalFields();
         List<String> source = new ArrayList<String>();
 
-        if (locals.size() == 0) return source;
+        //if (locals.size() == 0) return source;
 
         for (Variable local : locals) {
             if (local.isArray()) {
