@@ -176,6 +176,10 @@ public abstract class CapsuleProfileFactory extends AbstractCapsuleFactory
                 "public #0() {", 
                 generateClassName()));
 
+        if (capsule.getSelfField() != null) {
+            list.add("    panini$encapsulated.self = this;");
+        }
+        
         int i = 0;
         for (Variable v : capsule.getEventFields()) {
             List<String> source = Source.lines(

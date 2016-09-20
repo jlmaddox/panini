@@ -76,12 +76,27 @@ public class CapsuleTemplateVisitor extends SimpleElementVisitor8<CapsuleElement
         	fullTypeName = type.getQualifiedName().toString();
         }
         
+        
+        boolean isSelf = e.getSimpleName().toString().equals("self");
+        
+        // See DesignDeclCheck for explanation
+        TypeMirror self = e.asType();
+        String actualType = self.toString();
+
+        // No + "Template" -- dealing w/ capsule not capsule's template
+        String expectedType = capsule.getQualifiedName(); 
+        boolean isCorrectType = expectedType.endsWith(actualType);
+        
+        
+        
         if (e.getAnnotation(Local.class) != null) {
             capsule.addLocals(variable);
         } else if (e.getAnnotation(Imports.class) != null) {
             capsule.addImportDecl(variable);
         } else if (eventName.equals(fullTypeName)) {
             capsule.addEvent(variable);
+        } else if (isSelf && isCorrectType) {
+            capsule.setSelfField(variable);
         } else {
         	capsule.addState(variable);
         }

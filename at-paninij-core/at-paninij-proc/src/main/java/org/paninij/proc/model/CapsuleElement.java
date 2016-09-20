@@ -52,6 +52,8 @@ public class CapsuleElement implements Capsule
     private ArrayList<Variable> eventFields;
     private ArrayList<Variable> state;
 
+    private Variable selfField;
+
     private Set<String> imports;
 
     private boolean hasInitDecl;
@@ -78,6 +80,7 @@ public class CapsuleElement implements Capsule
         this.localFields = new ArrayList<Variable>();
         this.eventFields = new ArrayList<Variable>();
         this.importFields = new ArrayList<Variable>();
+        this.selfField = null;
         this.state = new ArrayList<Variable>();
         this.imports = new HashSet<String>();
         this.hasInitDecl = false;
@@ -104,6 +107,11 @@ public class CapsuleElement implements Capsule
     public List<Variable> getStateFields() {
         return new ArrayList<Variable>(this.state);
     }
+    
+    @Override
+    public Variable getSelfField() {
+        return this.selfField;
+    }
 
     public void addLocals(Variable v) {
         this.localFields.add(v);
@@ -121,6 +129,10 @@ public class CapsuleElement implements Capsule
         this.state.add(v);
     }
 
+    public void setSelfField(Variable v) {
+        this.selfField = v;
+    }
+    
     @Override
     public String getSimpleName() {
         return this.simpleName;

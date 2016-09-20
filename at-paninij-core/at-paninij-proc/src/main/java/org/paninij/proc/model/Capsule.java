@@ -34,6 +34,7 @@ public interface Capsule extends Signature
     public List<Variable> getImportFields();
     public List<Variable> getEventFields();
     public List<Variable> getStateFields();
+    public Variable getSelfField();
     public List<String> getSignatures();
     public boolean isRoot();
     public boolean hasInit();

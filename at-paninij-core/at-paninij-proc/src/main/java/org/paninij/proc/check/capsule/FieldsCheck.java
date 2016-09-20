@@ -99,7 +99,21 @@ public class FieldsCheck implements CapsuleCheck
 
         if (seemsToBeCapsuleField(field))
         {
-            if (!hasImports && !hasLocal) {
+            boolean isSelf = field.getSimpleName().toString().equals("self");
+            
+            // See DesignDeclCheck for explanation
+            TypeMirror self = field.asType();
+            String actualType = self.toString() + "Template";
+            String expectedType = template.getQualifiedName().toString();
+            boolean isCorrectType = expectedType.endsWith(actualType);
+            
+            if (isSelf && !isCorrectType) { 
+                String err = "Found a field named 'self' but is not of type "
+                        + expectedType + ". Type is actually " + actualType;
+                return new Error(err, FieldsCheck.class, field);
+            }
+            
+            if (!hasImports && !hasLocal && (!isSelf || !isCorrectType)) {
                 String err = "Found a field whose type seems to be a capsule, but it is not "
                            + "annotated with either `@Local` or `@Imports`.";
                 return new Error(err, FieldsCheck.class, field);

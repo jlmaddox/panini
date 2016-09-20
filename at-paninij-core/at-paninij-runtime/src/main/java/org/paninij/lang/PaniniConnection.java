@@ -31,7 +31,7 @@ import java.util.function.Consumer;
 public class PaniniConnection<T> {
     protected PaniniEvent<T> event;
     protected Consumer<T> handler;
-    protected boolean on;
+    protected volatile boolean on;
 
     public PaniniConnection(PaniniEvent<T> event, Consumer<T> handler) {
         this.event = event;
