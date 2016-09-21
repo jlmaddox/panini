@@ -52,4 +52,8 @@ public class PaniniEvent<T> {
             }
         }
     }
+    
+    public void unregister(PaniniConnection<T> conn) {
+        conn.unregister();
+    }
 }
