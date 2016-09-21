@@ -26,11 +26,12 @@
 package org.paninij.proc.check.capsule.duckability.kind;
 
 import org.paninij.lang.Capsule;
+import org.paninij.lang.Duck;
 
 @Capsule
 public class ArrayKindTemplate
 {
-    public Object[] objectArr() {
+    @Duck public Object[] objectArr() {
         return null;
     } 
 }

@@ -80,7 +80,7 @@ public class MessageShape
         case UNDUCKABLE:
             switch (this.procedure.getAnnotationKind()) {
             case DUCKFUTURE:
-                throw new IllegalArgumentException("Procedure labelled with @Duck is unduckable.");
+                throw new RuntimeException("Procedure labelled with @Duck is unduckable.");
             case FUTURE:
             case BLOCK:
                 return Category.FUTURE;
@@ -133,7 +133,7 @@ public class MessageShape
         default:
             break;
         }
-        throw new IllegalArgumentException("Message does not have a category, so it cannot fit into a package.");
+        throw new RuntimeException("Message does not have a category, so it cannot fit into a package.");
     }
     
     public String fullLocation() {
@@ -158,7 +158,7 @@ public class MessageShape
             return this.returnType.getMirror().toString();
         case ERROR:
         default:
-            throw new IllegalArgumentException("Message has an illegal (\"ERROR\") behavior, so the real return type cannot be determined.");
+            throw new RuntimeException("Message has an illegal (\"ERROR\") behavior, so the real return type cannot be determined.");
         }
     }
     
@@ -177,8 +177,10 @@ public class MessageShape
         case UNBLOCKED_DUCK:
             procedureType = "@org.paninij.lang.Duck";
         case UNBLOCKED_SIMPLE:
+            break;
         case ERROR:
         default:
+            throw new RuntimeException("Message has an illegal (\"ERROR\") behavior, so the kind annotation cannot be determined.");
         }
         
         return procedureType;

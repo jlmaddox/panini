@@ -18,21 +18,36 @@
  * http://paninij.org
  *
  * Contributors:
- * 	Dr. Hridesh Rajan,
- * 	Dalton Mills,
- * 	David Johnston,
- * 	Trey Erenberger
+ *  Dr. Hridesh Rajan,
+ *  Dalton Mills,
+ *  David Johnston,
+ *  Trey Erenberger
+ *  Jackson Maddox
  *******************************************************************************/
-package org.paninij.proc.check.capsule.duckability;
+package org.paninij.lang;
 
-import org.paninij.lang.Capsule;
-import org.paninij.proc.check.duckability.Point;
-import org.paninij.lang.Duck;
+import java.util.function.Consumer;
 
-@Capsule
-public class ReturnTypeHasExposedFieldsTemplate
-{
-    @Duck public Point proc() {
-        return null;
+public class PaniniConnection<T> {
+    protected PaniniEvent<T> event;
+    protected Consumer<T> handler;
+    protected volatile boolean on;
+
+    public PaniniConnection(PaniniEvent<T> event, Consumer<T> handler) {
+        this.event = event;
+        this.handler = handler;
+        this.on = true;
+    }
+
+    public void unregister() {
+        event.list.remove(this);
+    }
+
+    public void on() {
+        on = true;
+    }
+
+    public void off() {
+        on = false;
     }
 }

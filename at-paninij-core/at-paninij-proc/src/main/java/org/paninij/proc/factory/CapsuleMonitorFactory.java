@@ -166,8 +166,6 @@ public class CapsuleMonitorFactory extends CapsuleProfileFactory
         case BLOCKED_PREMADE:
             encap.add("return " + call + ";");
             return encap;
-        case ERROR:
-            break;
         case UNBLOCKED_FUTURE:
             argNames.add(0, "-1");
             args = String.join(", ", argNames);
@@ -185,10 +183,10 @@ public class CapsuleMonitorFactory extends CapsuleProfileFactory
         case UNBLOCKED_SIMPLE:
             encap.add(call + ";");
             return encap;
+        case ERROR:
         default:
-            break;
+            throw new IllegalArgumentException("Bad MessageShape behavior");
         }
-        return encap;
     }
 
     private List<String> generateProcedures()
@@ -205,7 +203,7 @@ public class CapsuleMonitorFactory extends CapsuleProfileFactory
         List<Variable> locals = this.capsule.getLocalFields();
         List<String> source = new ArrayList<String>();
 
-        if (locals.size() == 0) return source;
+        //if (locals.size() == 0) return source;
 
         for (Variable local : locals) {
             if (local.isArray()) {
@@ -318,6 +316,11 @@ public class CapsuleMonitorFactory extends CapsuleProfileFactory
         List<String> src = new ArrayList<String>();
 
         src.add(this.generateEncapsulatedDecl());
+        
+        src.addAll(this.generateEventFields());
+        src.addAll(this.generateConstructor());
+        src.addAll(this.generateEventMethods());
+        
         src.addAll(this.generateProcedures());
         src.addAll(this.generateCheckRequiredFields());
         src.addAll(this.generateExport());

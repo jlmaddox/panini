@@ -30,10 +30,14 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.SimpleElementVisitor8;
 
 import org.paninij.lang.Local;
 import org.paninij.lang.Imports;
+import org.paninij.lang.PaniniEvent;
 
 /**
  * The Template visitor as the main visitor for all capsule templates. This class is used by
@@ -60,13 +64,43 @@ public class CapsuleTemplateVisitor extends SimpleElementVisitor8<CapsuleElement
     @Override
     public CapsuleElement visitVariable(VariableElement e, CapsuleElement capsule) {
         Variable variable = new Variable(e.asType(), e.getSimpleName().toString(), false);
+        
+        String eventName = PaniniEvent.class.getName();
+        TypeMirror mirror = e.asType();
+        DeclaredType dec = null;
+        TypeElement type = null;
+        String fullTypeName = null;
+        if (mirror.getKind() == TypeKind.DECLARED) {
+        	dec = (DeclaredType) e.asType();
+        	type = (TypeElement) dec.asElement();
+        	fullTypeName = type.getQualifiedName().toString();
+        }
+        
+        
+        boolean isSelf = e.getSimpleName().toString().equals("self");
+        
+        // See DesignDeclCheck for explanation
+        TypeMirror self = e.asType();
+        String actualType = self.toString();
+
+        // No + "Template" -- dealing w/ capsule not capsule's template
+        String expectedType = capsule.getQualifiedName(); 
+        boolean isCorrectType = expectedType.endsWith(actualType);
+        
+        
+        
         if (e.getAnnotation(Local.class) != null) {
             capsule.addLocals(variable);
         } else if (e.getAnnotation(Imports.class) != null) {
             capsule.addImportDecl(variable);
+        } else if (eventName.equals(fullTypeName)) {
+            capsule.addEvent(variable);
+        } else if (isSelf && isCorrectType) {
+            capsule.setSelfField(variable);
         } else {
-            capsule.addState(variable);
+        	capsule.addState(variable);
         }
+        
         return capsule;
     }
 }
