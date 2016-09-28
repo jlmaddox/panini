@@ -18,28 +18,30 @@
  * http://paninij.org
  *
  * Contributors:
- * 	Dr. Hridesh Rajan,
- * 	Dalton Mills,
- * 	David Johnston,
- * 	Trey Erenberger
+ *  Dr. Hridesh Rajan,
+ *  Dalton Mills,
+ *  David Johnston,
+ *  Trey Erenberger
  *  Jackson Maddox
  *******************************************************************************/
+package org.paninij.lang;
 
-package org.paninij.proc.model;
+import java.util.function.Consumer;
 
-import java.util.List;
+public class PaniniConnection<T> {
+    protected Consumer<T> handler;
+    protected volatile boolean on;
 
-public interface Capsule extends Signature
-{
-    public List<Variable> getLocalFields();
-    public List<Variable> getImportFields();
-    public List<Variable> getEventFields();
-    public List<Variable> getStateFields();
-    public List<String> getSignatures();
-    public boolean isRoot();
-    public boolean hasInit();
-    public boolean hasRun();
-    public boolean hasDesign();
-    public boolean isActive();
-    public boolean hasActiveAncestor();
+    public PaniniConnection(Consumer<T> handler) {
+        this.handler = handler;
+        this.on = true;
+    }
+
+    public void on() {
+        on = true;
+    }
+
+    public void off() {
+        on = false;
+    }
 }

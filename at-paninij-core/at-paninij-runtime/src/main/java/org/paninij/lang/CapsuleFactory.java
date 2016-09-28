@@ -44,7 +44,7 @@ import org.paninij.runtime.Panini$Capsule;
 public class CapsuleFactory
 {
     public final Class<Panini$Capsule>  capsuleInterface;
-    public final Class<Capsule$Mockup>  capsuleMockup;
+    //public final Class<Capsule$Mockup>  capsuleMockup;
     public final Class<Capsule$Monitor> capsuleMonitor;
     public final Class<Capsule$Serial>  capsuleSerial;
     public final Class<Capsule$Task>    capsuleTask;
@@ -58,7 +58,7 @@ public class CapsuleFactory
         
     	capsuleInterface = (Class<Panini$Capsule>) clazz;
         
-        capsuleMockup  = (Class<Capsule$Mockup>)  Class.forName(clazz.getName() + "$Mockup", true, loader);
+        //capsuleMockup  = (Class<Capsule$Mockup>)  Class.forName(clazz.getName() + "$Mockup", true, loader);
         capsuleMonitor = (Class<Capsule$Monitor>) Class.forName(clazz.getName() + "$Monitor",true, loader);
         capsuleSerial  = (Class<Capsule$Serial>)  Class.forName(clazz.getName() + "$Serial", true, loader);
         capsuleTask    = (Class<Capsule$Task>)    Class.forName(clazz.getName() + "$Task",   true, loader);
@@ -67,7 +67,8 @@ public class CapsuleFactory
     }
 
     public Capsule$Mockup newMockupInstance() {
-        return newInstance(capsuleMockup);
+        throw new UnsupportedOperationException();
+        //return newInstance(capsuleMockup);
     }
 
     public Capsule$Monitor newMonitorInstance() {
@@ -109,7 +110,8 @@ public class CapsuleFactory
     {
         switch (profile) {
         case MOCKUP:
-            return capsuleMockup;
+            throw new UnsupportedOperationException();
+            //return capsuleMockup;
         case MONITOR:
             return capsuleMonitor;
         case SERIAL:

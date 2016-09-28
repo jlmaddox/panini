@@ -18,28 +18,33 @@
  * http://paninij.org
  *
  * Contributors:
- * 	Dr. Hridesh Rajan,
- * 	Dalton Mills,
- * 	David Johnston,
- * 	Trey Erenberger
+ *  Dr. Hridesh Rajan,
+ *  Dalton Mills,
+ *  David Johnston,
+ *  Trey Erenberger
  *  Jackson Maddox
  *******************************************************************************/
+package org.paninij.lang;
 
-package org.paninij.proc.model;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Consumer;
 
-import java.util.List;
+import org.paninij.runtime.Panini$Capsule;
 
-public interface Capsule extends Signature
-{
-    public List<Variable> getLocalFields();
-    public List<Variable> getImportFields();
-    public List<Variable> getEventFields();
-    public List<Variable> getStateFields();
-    public List<String> getSignatures();
-    public boolean isRoot();
-    public boolean hasInit();
-    public boolean hasRun();
-    public boolean hasDesign();
-    public boolean isActive();
-    public boolean hasActiveAncestor();
+public class PaniniEvent<T> {
+    private ConcurrentLinkedQueue<PaniniConnection<T>> list = new ConcurrentLinkedQueue<>();
+
+    public PaniniConnection<T> register(Panini$Capsule capsule, Consumer<T> handler) {
+        PaniniConnection<T> conn = new PaniniConnection<>(handler);
+        list.add(conn);
+        return conn;
+    }
+
+    public void announce(T arg) {
+        for (PaniniConnection<T> con : list) {
+            if (con.on) {
+                con.handler.accept(arg);
+            }
+        }
+    }
 }

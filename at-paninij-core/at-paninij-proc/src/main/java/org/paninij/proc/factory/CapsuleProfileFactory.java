@@ -22,6 +22,7 @@
  * 	Dalton Mills,
  * 	David Johnston,
  * 	Trey Erenberger
+ *  Jackson Maddox
  *******************************************************************************/
 package org.paninij.proc.factory;
 
@@ -139,6 +140,44 @@ public abstract class CapsuleProfileFactory extends AbstractCapsuleFactory
         return declaration;
     }
 
+    protected List<String> generateEventMethods() {
+        List<String> list = new ArrayList<String>();
+
+        for (Variable v : capsule.getEventFields()) {
+            List<String> source = Source.lines(
+                    "@Override",
+                    "public #0 #1() {",
+                    "    return panini$encapsulated.#1;",
+                    "}",
+                    "");
+
+            list.addAll(Source.formatAll(source,
+                    v.raw(),
+                    v.getIdentifier()));
+        }
+
+        return list;
+    }
+
+    protected List<String> generateConstructor() {
+        List<String> list = new ArrayList<String>();
+
+        list.add(Source.format(
+                "public #0() {",
+                generateClassName()));
+
+        for (Variable v : capsule.getEventFields()) {
+            list.add(Source.format(
+                    "    panini$encapsulated.#0 = new PaniniEvent<>();",
+                    v.getIdentifier()));
+        }
+
+        list.add("}");
+        list.add("");
+
+        return list;
+    }
+    
     protected String generateAssertSafeInvocationTransfer()
     {
         // TODO: Clean this up!

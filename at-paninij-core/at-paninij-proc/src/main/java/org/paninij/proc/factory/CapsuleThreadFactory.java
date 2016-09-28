@@ -22,6 +22,7 @@
  * 	Dalton Mills,
  * 	David Johnston,
  * 	Trey Erenberger
+ *  Jackson Maddox
  *******************************************************************************/
 
 package org.paninij.proc.factory;
@@ -150,8 +151,6 @@ public class CapsuleThreadFactory extends CapsuleProfileFactory
     {
         List<Variable> locals = this.capsule.getLocalFields();
         List<String> source = new ArrayList<String>();
-
-        if (locals.size() == 0) return source;
 
         for (Variable local : locals) {
             if (local.isArray()) {
@@ -392,7 +391,9 @@ public class CapsuleThreadFactory extends CapsuleProfileFactory
 
         src.add(this.generateEncapsulatedDecl());
         src.addAll(this.generateProcedureIDs());
+        src.addAll(this.generateConstructor());
         src.addAll(this.generateProcedures());
+        src.addAll(this.generateEventMethods());
         src.addAll(this.generateCheckRequiredFields());
         src.addAll(this.generateExport());
         src.addAll(this.generateInitLocals());

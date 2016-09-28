@@ -66,7 +66,6 @@ import org.paninij.proc.check.signature.SignatureCheckException;
 import org.paninij.proc.check.signature.SignatureChecker;
 import org.paninij.proc.factory.ArtifactFactory;
 import org.paninij.proc.factory.CapsuleInterfaceFactory;
-import org.paninij.proc.factory.CapsuleMockupFactory;
 import org.paninij.proc.factory.CapsuleMonitorFactory;
 import org.paninij.proc.factory.CapsuleSerialFactory;
 import org.paninij.proc.factory.CapsuleTaskFactory;
@@ -188,7 +187,10 @@ public class PaniniProcessor extends AbstractProcessor
         MessageFactory messageFactory = new MessageFactory();
         SignatureFactory signatureFactory = new SignatureFactory();
         CapsuleInterfaceFactory capsuleInterfaceFactory = new CapsuleInterfaceFactory();
-        CapsuleMockupFactory capsuleMockupFactory = new CapsuleMockupFactory();
+
+        // CapsuleMockupFactory is not currently used and conflicts with the event implementation
+        //CapsuleMockupFactory capsuleMockupFactory = new CapsuleMockupFactory();
+
         CapsuleTestFactory capsuleTestFactory = new CapsuleTestFactory();
         CapsuleThreadFactory threadCapsuleFactory = new CapsuleThreadFactory();
         CapsuleSerialFactory serialCapsuleFactory = new CapsuleSerialFactory();
@@ -207,7 +209,7 @@ public class PaniniProcessor extends AbstractProcessor
             artifactMaker.add(signatureFactory.make(signature));
             
             // Generate a mockup capsule implementing the signature interface.
-            artifactMaker.add(capsuleMockupFactory.make(signature));
+            //artifactMaker.add(capsuleMockupFactory.make(signature));
         }
         
         // Generate artifacts from each `Capsule` model.
@@ -222,7 +224,7 @@ public class PaniniProcessor extends AbstractProcessor
             artifactMaker.add(capsuleInterfaceFactory.make(capsule));
             
             // Generate mockup capsule implementing the capsule interface.
-            artifactMaker.add(capsuleMockupFactory.make(capsule));
+            //artifactMaker.add(capsuleMockupFactory.make(capsule));
 
             // Generate the capsules with four different thread profiles
             artifactMaker.add(threadCapsuleFactory.make(capsule));
