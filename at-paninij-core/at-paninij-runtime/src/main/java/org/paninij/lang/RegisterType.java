@@ -26,31 +26,7 @@
  *******************************************************************************/
 package org.paninij.lang;
 
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.function.BiConsumer;
-
-import org.paninij.runtime.EventMode;
-
-public class PaniniEvent<T> {
-    private ConcurrentLinkedQueue<PaniniConnection<T>> list = new ConcurrentLinkedQueue<>();
-    private final EventMode mode;
-    
-    public PaniniEvent(EventMode mode) {
-        this.mode = mode;
-    }
-    
-    public PaniniConnection<T> register(BiConsumer<PaniniEventExecution<T>, T> handler, RegisterType type) {
-        PaniniConnection<T> conn = new PaniniConnection<>(handler, type);
-        list.add(conn);
-        return conn;
-    }
-
-    public PaniniEventExecution<T> announce(T arg) {
-        ConcurrentLinkedQueue<PaniniConnection<T>> announceList = null;
-        announceList = new ConcurrentLinkedQueue<>(list);
-        
-        PaniniEventExecution<T> ex = new PaniniEventExecution<>(announceList);
-        ex.execute(mode, arg);
-        return ex;
-    }
+public enum RegisterType {
+    READ,
+    WRITE
 }

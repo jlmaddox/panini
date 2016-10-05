@@ -164,10 +164,12 @@ public class CapsuleInterfaceFactory extends AbstractCapsuleFactory
     }
     
     protected String generateHandlerFacades(Procedure p) {
-        String argDeclString = p.getParameters().get(0).toString();
-        String declaration = Source.format("public void #0(PaniniEventExecution ex, #1);", 
+        Variable param = p.getParameters().get(0);
+        String argDeclString = param.toString();
+        String declaration = Source.format("public void #0(PaniniEventExecution<#2> ex, #1);", 
                 p.getName(),
-                argDeclString);
+                argDeclString,
+                param.getMirror().toString());
         
         return declaration;
     }

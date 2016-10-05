@@ -177,7 +177,7 @@ public abstract class CapsuleProfileFactory extends AbstractCapsuleFactory
             else {
                 source = Source.lines(
                         "@Override",
-                        "public void #0(PaniniEventExecution ex, #1) {",
+                        "public void #0(PaniniEventExecution<#2> ex, #1) {",
                         "    PaniniEventMessage<#2> panini$message = null;",
                         "    panini$message = new PaniniEventMessage<>(#4, ex, #3);",
                         "    panini$push(panini$message);",
