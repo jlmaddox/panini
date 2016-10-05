@@ -162,18 +162,28 @@ public abstract class CapsuleProfileFactory extends AbstractCapsuleFactory
         return list;
     }
     
-    protected List<String> generateEventHandlers() {
+    protected List<String> generateEventHandlers(boolean skip) {
         List<String> list = new ArrayList<String>();
         
         for (Procedure p : capsule.getEventHandlers()) {
-            List<String> source = Source.lines(
-                    "@Override",
-                    "public void #0(PaniniEventExecution ex, #1) {",
-                    "    PaniniEventMessage<#2> panini$message = null;",
-                    "    panini$message = new PaniniEventMessage<>(#4, ex, #3);",
-                    "    panini$push(panini$message);",
-                    "}",
-                    "");
+            List<String> source;
+            if (skip) {
+                source = Source.lines(
+                        "@Override",
+                        "public void #0(PaniniEventExecution ex, #1) {",
+                        "}",
+                        "");
+            }
+            else {
+                source = Source.lines(
+                        "@Override",
+                        "public void #0(PaniniEventExecution ex, #1) {",
+                        "    PaniniEventMessage<#2> panini$message = null;",
+                        "    panini$message = new PaniniEventMessage<>(#4, ex, #3);",
+                        "    panini$push(panini$message);",
+                        "}",
+                        "");
+            }
             
             Variable param = p.getParameters().get(0);
             String argDeclString = param.toString();

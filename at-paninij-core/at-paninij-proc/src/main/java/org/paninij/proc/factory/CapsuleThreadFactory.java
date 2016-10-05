@@ -349,12 +349,17 @@ public class CapsuleThreadFactory extends CapsuleProfileFactory
     }
 
     private List<String> generateRunHandlerSwitchCase(Procedure p) {
-        List<String> list = new ArrayList<String>();
-        
-        // TODO
-        // execute handler, then notify ex
-        
-        return list;
+        List<String> list = Source.lines(
+                "case #0: {",
+                "    PaniniEventMessage<#1> em = (PaniniEventMessage<#1>) msg;",
+                "    panini$encapsulated.#2(em.arg0);",
+                "    em.ex.panini$markComplete();",
+                "    break;",
+                "}");
+        return Source.formatAll(list, 
+                generateProcedureID(p),
+                p.getParameters().get(0).getMirror().toString(),
+                p.getName());
     }
     
     private String generateEncapsulatedMethodCall(MessageShape shape)
@@ -409,7 +414,7 @@ public class CapsuleThreadFactory extends CapsuleProfileFactory
         src.addAll(this.generateProcedureIDs());
         src.addAll(this.generateConstructor());
         src.addAll(this.generateProcedures());
-        src.addAll(this.generateEventHandlers());
+        src.addAll(this.generateEventHandlers(false));
         src.addAll(this.generateEventMethods());
         src.addAll(this.generateCheckRequiredFields());
         src.addAll(this.generateExport());

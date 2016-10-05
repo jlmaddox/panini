@@ -310,7 +310,7 @@ public class CapsuleSerialFactory extends CapsuleProfileFactory
         src.add(this.generateEncapsulatedDecl());
         src.addAll(this.generateConstructor());
         src.addAll(this.generateProcedures());
-        src.addAll(this.generateEventHandlers());
+        src.addAll(this.generateEventHandlers(true));
         src.addAll(this.generateEventMethods());
         src.addAll(this.generateCheckRequiredFields());
         src.addAll(this.generateExport());
