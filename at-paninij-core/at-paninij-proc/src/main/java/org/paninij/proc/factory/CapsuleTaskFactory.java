@@ -97,6 +97,8 @@ public class CapsuleTaskFactory extends CapsuleProfileFactory
         
         imports.add("javax.annotation.Generated");
         imports.add("java.util.concurrent.Future");
+        imports.add("org.paninij.lang.PaniniEventExecution");
+        imports.add("org.paninij.runtime.PaniniEventMessage");
         imports.add("org.paninij.runtime.Capsule$Task");
         imports.add("org.paninij.runtime.Panini$Capsule");
         imports.add("org.paninij.runtime.Panini$Message");
@@ -405,6 +407,7 @@ public class CapsuleTaskFactory extends CapsuleProfileFactory
         src.addAll(this.generateProcedureIDs());
         src.addAll(this.generateConstructor());
         src.addAll(this.generateProcedures());
+        src.addAll(this.generateEventHandlers());
         src.addAll(this.generateEventMethods());
         src.addAll(this.generateCheckRequiredFields());
         src.addAll(this.generateExport());

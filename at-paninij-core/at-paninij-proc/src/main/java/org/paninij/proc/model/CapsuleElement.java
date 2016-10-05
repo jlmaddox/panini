@@ -37,6 +37,7 @@ import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 
+import org.paninij.lang.Handler;
 import org.paninij.lang.Root;
 import org.paninij.proc.util.PaniniModel;
 import org.paninij.proc.util.TypeCollector;
@@ -48,9 +49,12 @@ public class CapsuleElement implements Capsule
     private TypeElement element;
 
     private ArrayList<Procedure> procedures;
+    private ArrayList<Procedure> eventHandlers;
     private ArrayList<Variable> localFields;
     private ArrayList<Variable> importFields;
-    private ArrayList<Variable> eventFields;
+    private ArrayList<Variable> broadcastEventFields;
+    private ArrayList<Variable> chainEventFields;
+
     private ArrayList<Variable> state;
 
     private Set<String> imports;
@@ -76,9 +80,11 @@ public class CapsuleElement implements Capsule
         this.qualifiedName = "";
         this.element = null;
         this.procedures = new ArrayList<Procedure>();
+        this.eventHandlers = new ArrayList<Procedure>();
         this.localFields = new ArrayList<Variable>();
         this.importFields = new ArrayList<Variable>();
-        this.eventFields = new ArrayList<Variable>();
+        this.broadcastEventFields = new ArrayList<Variable>();
+        this.chainEventFields = new ArrayList<Variable>();
         this.state = new ArrayList<Variable>();
         this.imports = new HashSet<String>();
         this.hasInitDecl = false;
@@ -97,8 +103,13 @@ public class CapsuleElement implements Capsule
     }
 
     @Override
-    public List<Variable> getEventFields() {
-        return new ArrayList<Variable>(this.eventFields);
+    public List<Variable> getBroadcastEventFields() {
+        return new ArrayList<Variable>(this.broadcastEventFields);
+    }
+    
+    @Override
+    public List<Variable> getChainEventFields() {
+        return new ArrayList<Variable>(this.chainEventFields);
     }
 
     @Override
@@ -114,8 +125,12 @@ public class CapsuleElement implements Capsule
         this.importFields.add(v);
     }
 
-    public void addEvent(Variable v) {
-        this.eventFields.add(v);
+    public void addBroadcastEvent(Variable v) {
+        this.broadcastEventFields.add(v);
+    }
+    
+    public void addChainEvent(Variable v) {
+        this.chainEventFields.add(v);
     }
 
     public void addState(Variable v) {
@@ -134,7 +149,12 @@ public class CapsuleElement implements Capsule
 
     @Override
     public List<Procedure> getProcedures() {
-        return this.procedures;
+        return new ArrayList<Procedure> (procedures);
+    }
+    
+    @Override
+    public List<Procedure> getEventHandlers() {
+        return new ArrayList<Procedure> (eventHandlers);
     }
 
     @Override
@@ -194,7 +214,12 @@ public class CapsuleElement implements Capsule
 
     public void addExecutable(ExecutableElement e) {
         if (PaniniModel.isProcedure(e)) {
-            this.procedures.add(new ProcedureElement(e));
+            if (e.getAnnotation(Handler.class) != null) {
+                this.eventHandlers.add(new ProcedureElement(e));
+            }
+            else {
+                this.procedures.add(new ProcedureElement(e));
+            }
         } else {
             String name = e.getSimpleName().toString();
 
@@ -208,7 +233,7 @@ public class CapsuleElement implements Capsule
 
         }
     }
-
+    
     public void setTypeElement(TypeElement e) {
         if (this.element == null) {
             this.element = e;

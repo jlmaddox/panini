@@ -24,33 +24,25 @@
  *  Trey Erenberger
  *  Jackson Maddox
  *******************************************************************************/
-package org.paninij.lang;
 
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.function.BiConsumer;
+package org.paninij.runtime;
 
-import org.paninij.runtime.EventMode;
+import org.paninij.lang.PaniniEventExecution;
 
-public class PaniniEvent<T> {
-    private ConcurrentLinkedQueue<PaniniConnection<T>> list = new ConcurrentLinkedQueue<>();
-    private final EventMode mode;
-    
-    public PaniniEvent(EventMode mode) {
-        this.mode = mode;
-    }
-    
-    public PaniniConnection<T> register(BiConsumer<PaniniEventExecution, T> handler) {
-        PaniniConnection<T> conn = new PaniniConnection<>(handler);
-        list.add(conn);
-        return conn;
+public class PaniniEventMessage<T> implements Panini$Message
+{
+    public final int procID;
+    public final PaniniEventExecution ex;
+    public final T arg0;
+
+    public PaniniEventMessage(int procID, PaniniEventExecution ex, T arg0) {
+        this.procID = procID;
+        this.ex = ex;
+        this.arg0 = arg0;
     }
 
-    public void announce(T arg) {
-        PaniniEventExecution ex = new PaniniEventExecution();
-        for (PaniniConnection<T> con : list) {
-            if (con.on) {
-                con.handler.accept(ex, arg);
-            }
-        }
+    @Override
+    public int panini$msgID() {
+        return procID;
     }
 }

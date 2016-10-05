@@ -142,8 +142,11 @@ public abstract class CapsuleProfileFactory extends AbstractCapsuleFactory
 
     protected List<String> generateEventMethods() {
         List<String> list = new ArrayList<String>();
-
-        for (Variable v : capsule.getEventFields()) {
+        
+        List<Variable> allEvents = capsule.getBroadcastEventFields();
+        allEvents.addAll(capsule.getChainEventFields());
+        
+        for (Variable v : allEvents) {
             List<String> source = Source.lines(
                     "@Override",
                     "public #0 #1() {",
@@ -158,6 +161,32 @@ public abstract class CapsuleProfileFactory extends AbstractCapsuleFactory
 
         return list;
     }
+    
+    protected List<String> generateEventHandlers() {
+        List<String> list = new ArrayList<String>();
+        
+        for (Procedure p : capsule.getEventHandlers()) {
+            List<String> source = Source.lines(
+                    "@Override",
+                    "public void #0(PaniniEventExecution ex, #1) {",
+                    "    PaniniEventMessage<#2> panini$message = null;",
+                    "    panini$message = new PaniniEventMessage<>(#4, ex, #3);",
+                    "    panini$push(panini$message);",
+                    "}",
+                    "");
+            
+            Variable param = p.getParameters().get(0);
+            String argDeclString = param.toString();
+            list.addAll(Source.formatAll(source,
+                    p.getName(),
+                    argDeclString,
+                    param.getMirror().toString(),
+                    param.getIdentifier(),
+                    generateProcedureID(p)));
+        }
+        
+        return list;
+    }
 
     protected List<String> generateConstructor() {
         List<String> list = new ArrayList<String>();
@@ -166,9 +195,14 @@ public abstract class CapsuleProfileFactory extends AbstractCapsuleFactory
                 "public #0() {",
                 generateClassName()));
 
-        for (Variable v : capsule.getEventFields()) {
+        for (Variable v : capsule.getBroadcastEventFields()) {
             list.add(Source.format(
-                    "    panini$encapsulated.#0 = new PaniniEvent<>();",
+                    "    panini$encapsulated.#0 = new PaniniEvent<>(org.paninij.runtime.EventMode.BROADCAST);",
+                    v.getIdentifier()));
+        }
+        for (Variable v : capsule.getChainEventFields()) {
+            list.add(Source.format(
+                    "    panini$encapsulated.#0 = new PaniniEvent<>(org.paninij.runtime.EventMode.CHAIN);",
                     v.getIdentifier()));
         }
 

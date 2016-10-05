@@ -115,7 +115,8 @@ public class CapsuleInterfaceFactory extends AbstractCapsuleFactory
         imports.add("org.paninij.lang.CapsuleInterface");
         imports.add("org.paninij.runtime.Panini$Capsule");
         imports.add("org.paninij.runtime.Panini$Capsule$Root");
-
+        imports.add("org.paninij.lang.PaniniEventExecution");
+        
         List<String> prefixedImports = new ArrayList<String>();
 
         for (String i : imports) {
@@ -131,6 +132,10 @@ public class CapsuleInterfaceFactory extends AbstractCapsuleFactory
 
         for (Procedure p : this.capsule.getProcedures()) {
             facades.add(this.generateFacade(p));
+            facades.add("");
+        }
+        for (Procedure p : this.capsule.getEventHandlers()) {
+            facades.add(this.generateHandlerFacades(p));
             facades.add("");
         }
 
@@ -158,10 +163,22 @@ public class CapsuleInterfaceFactory extends AbstractCapsuleFactory
         return declaration;
     }
     
+    protected String generateHandlerFacades(Procedure p) {
+        String argDeclString = p.getParameters().get(0).toString();
+        String declaration = Source.format("public void #0(PaniniEventExecution ex, #1);", 
+                p.getName(),
+                argDeclString);
+        
+        return declaration;
+    }
+    
     protected List<String> generateEventFacades() {
         List<String> facades = new ArrayList<>();
 
-        for (Variable v : capsule.getEventFields()) {
+        List<Variable> allEvents = capsule.getBroadcastEventFields();
+        allEvents.addAll(capsule.getChainEventFields());
+        
+        for (Variable v : allEvents) {
             facades.add(Source.format("public #0 #1();",
                     v.raw(),
                     v.getIdentifier()));

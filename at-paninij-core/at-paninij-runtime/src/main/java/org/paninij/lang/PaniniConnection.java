@@ -26,13 +26,13 @@
  *******************************************************************************/
 package org.paninij.lang;
 
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 public class PaniniConnection<T> {
-    protected Consumer<T> handler;
+    protected BiConsumer<PaniniEventExecution, T> handler;
     protected volatile boolean on;
 
-    public PaniniConnection(Consumer<T> handler) {
+    public PaniniConnection(BiConsumer<PaniniEventExecution, T> handler) {
         this.handler = handler;
         this.on = true;
     }

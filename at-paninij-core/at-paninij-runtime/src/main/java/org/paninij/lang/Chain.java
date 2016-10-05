@@ -18,39 +18,19 @@
  * http://paninij.org
  *
  * Contributors:
- *  Dr. Hridesh Rajan,
- *  Dalton Mills,
- *  David Johnston,
- *  Trey Erenberger
+ * 	Dr. Hridesh Rajan,
+ * 	Dalton Mills,
+ * 	David Johnston,
+ * 	Trey Erenberger
  *  Jackson Maddox
  *******************************************************************************/
+
 package org.paninij.lang;
 
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.function.BiConsumer;
+import java.lang.annotation.Documented;
 
-import org.paninij.runtime.EventMode;
-
-public class PaniniEvent<T> {
-    private ConcurrentLinkedQueue<PaniniConnection<T>> list = new ConcurrentLinkedQueue<>();
-    private final EventMode mode;
-    
-    public PaniniEvent(EventMode mode) {
-        this.mode = mode;
-    }
-    
-    public PaniniConnection<T> register(BiConsumer<PaniniEventExecution, T> handler) {
-        PaniniConnection<T> conn = new PaniniConnection<>(handler);
-        list.add(conn);
-        return conn;
-    }
-
-    public void announce(T arg) {
-        PaniniEventExecution ex = new PaniniEventExecution();
-        for (PaniniConnection<T> con : list) {
-            if (con.on) {
-                con.handler.accept(ex, arg);
-            }
-        }
-    }
-}
+/**
+ * TODO
+ */
+@Documented
+public @interface Chain { }

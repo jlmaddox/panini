@@ -38,6 +38,8 @@ import javax.lang.model.util.SimpleElementVisitor8;
 
 import org.paninij.lang.Local;
 import org.paninij.lang.PaniniEvent;
+
+import org.paninij.lang.Broadcast;
 import org.paninij.lang.Imports;
 
 /**
@@ -81,7 +83,12 @@ public class CapsuleTemplateVisitor extends SimpleElementVisitor8<CapsuleElement
         } else if (e.getAnnotation(Imports.class) != null) {
             capsule.addImportDecl(variable);
         } else if (eventName.equals(fullTypeName)) {
-            capsule.addEvent(variable);
+            if (e.getAnnotation(Broadcast.class) != null) {
+                capsule.addBroadcastEvent(variable);
+            }
+            else { // Assume chain event by default
+                capsule.addChainEvent(variable);
+            }
         } else {
             capsule.addState(variable);
         }

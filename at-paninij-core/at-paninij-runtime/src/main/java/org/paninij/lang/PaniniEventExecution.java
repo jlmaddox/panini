@@ -26,31 +26,16 @@
  *******************************************************************************/
 package org.paninij.lang;
 
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.function.BiConsumer;
-
-import org.paninij.runtime.EventMode;
-
-public class PaniniEvent<T> {
-    private ConcurrentLinkedQueue<PaniniConnection<T>> list = new ConcurrentLinkedQueue<>();
-    private final EventMode mode;
-    
-    public PaniniEvent(EventMode mode) {
-        this.mode = mode;
+public class PaniniEventExecution {
+    public void panini$markComplete() {
+        
     }
     
-    public PaniniConnection<T> register(BiConsumer<PaniniEventExecution, T> handler) {
-        PaniniConnection<T> conn = new PaniniConnection<>(handler);
-        list.add(conn);
-        return conn;
+    public void waitForComplete() {
+        
     }
-
-    public void announce(T arg) {
-        PaniniEventExecution ex = new PaniniEventExecution();
-        for (PaniniConnection<T> con : list) {
-            if (con.on) {
-                con.handler.accept(ex, arg);
-            }
-        }
+    
+    public void panini$add() {
+        
     }
 }
