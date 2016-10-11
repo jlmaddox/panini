@@ -153,6 +153,29 @@ public class CapsuleMonitorFactory extends CapsuleProfileFactory
         return Source.formatAlignedFirst(source, this.generateEncapsulatedMethodCall(shape));
     }
 
+    @Override
+    protected List<String> generateEventHandler(Procedure handler) {
+        List<String> source = null;
+
+        source = Source.lines(
+                "@Override",
+                "public synchronized void #0(PaniniEventExecution<#2> ex, #1) {",
+                "    panini$encapsulated.#0(#3);",
+                "    ex.panini$markComplete();",
+                "}",
+                "");
+
+        Variable param = handler.getParameters().get(0);
+        String argDeclString = param.toString();
+        source = Source.formatAll(source,
+                handler.getName(),
+                argDeclString,
+                param.getMirror().toString(),
+                param.getIdentifier());
+
+        return source;
+    }
+
     private List<String> generateEncapsulatedMethodCall(MessageShape shape)
     {
         List<String> encap = new ArrayList<String>();
@@ -321,7 +344,7 @@ public class CapsuleMonitorFactory extends CapsuleProfileFactory
         src.add(this.generateEncapsulatedDecl());
         src.addAll(this.generateConstructor());
         src.addAll(this.generateProcedures());
-        src.addAll(this.generateEventHandlers(true));
+        src.addAll(this.generateEventHandlers());
         src.addAll(this.generateEventMethods());
         src.addAll(this.generateCheckRequiredFields());
         src.addAll(this.generateExport());

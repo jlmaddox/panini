@@ -32,10 +32,10 @@ import org.paninij.lang.PaniniEventExecution;
 public class PaniniEventMessage<T> implements Panini$Message
 {
     public final int procID;
-    public final PaniniEventExecution ex;
+    public final PaniniEventExecution<T> ex;
     public final T arg0;
 
-    public PaniniEventMessage(int procID, PaniniEventExecution ex, T arg0) {
+    public PaniniEventMessage(int procID, PaniniEventExecution<T> ex, T arg0) {
         this.procID = procID;
         this.ex = ex;
         this.arg0 = arg0;

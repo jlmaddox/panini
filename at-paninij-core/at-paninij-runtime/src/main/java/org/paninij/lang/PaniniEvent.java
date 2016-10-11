@@ -40,6 +40,10 @@ public class PaniniEvent<T> {
     }
     
     public PaniniConnection<T> register(BiConsumer<PaniniEventExecution<T>, T> handler, RegisterType type) {
+        if (type == RegisterType.WRITE && mode == EventMode.BROADCAST) {
+            throw new IllegalArgumentException("Cannot register writer to broadcast event");
+        }
+        
         PaniniConnection<T> conn = new PaniniConnection<>(handler, type);
         list.add(conn);
         return conn;

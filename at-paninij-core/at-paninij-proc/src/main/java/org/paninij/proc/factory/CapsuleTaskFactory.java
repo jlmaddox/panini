@@ -127,7 +127,9 @@ public class CapsuleTaskFactory extends CapsuleProfileFactory
         ArrayList<String> decls = new ArrayList<String>();
         int currID = 0;
 
-        for (Procedure p : this.capsule.getProcedures()) {
+        List<Procedure> allProcs = this.capsule.getProcedures();
+        allProcs.addAll(capsule.getEventHandlers());
+        for (Procedure p : allProcs) {
             decls.add(Source.format("public static final int #0 = #1;",
                     generateProcedureID(p),
                     currID++));
@@ -298,6 +300,9 @@ public class CapsuleTaskFactory extends CapsuleProfileFactory
         for (Procedure p : this.capsule.getProcedures()) {
             lines.addAll(this.generateRunSwitchCase(p));
         }
+        for (Procedure p : this.capsule.getEventHandlers()) {
+            lines.addAll(this.generateRunHandlerSwitchCase(p));
+        }
 
         // add case statements for when a capsule shuts down and for EXIT command
         lines.addAll(Source.lines(
@@ -356,6 +361,20 @@ public class CapsuleTaskFactory extends CapsuleProfileFactory
         }
     }
 
+    private List<String> generateRunHandlerSwitchCase(Procedure p) {
+        List<String> list = Source.lines(
+                "case #0: {",
+                "    PaniniEventMessage<#1> em = (PaniniEventMessage<#1>) msg;",
+                "    panini$encapsulated.#2(em.arg0);",
+                "    em.ex.panini$markComplete();",
+                "    break;",
+                "}");
+        return Source.formatAll(list,
+                generateProcedureID(p),
+                p.getParameters().get(0).getMirror().toString(),
+                p.getName());
+    }
+
     private String generateEncapsulatedMethodCall(MessageShape shape)
     {
         List<String> args = new ArrayList<String>();
@@ -407,7 +426,7 @@ public class CapsuleTaskFactory extends CapsuleProfileFactory
         src.addAll(this.generateProcedureIDs());
         src.addAll(this.generateConstructor());
         src.addAll(this.generateProcedures());
-        src.addAll(this.generateEventHandlers(true));
+        src.addAll(this.generateEventHandlers());
         src.addAll(this.generateEventMethods());
         src.addAll(this.generateCheckRequiredFields());
         src.addAll(this.generateExport());

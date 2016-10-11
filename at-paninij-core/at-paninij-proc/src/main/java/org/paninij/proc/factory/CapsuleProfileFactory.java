@@ -162,40 +162,38 @@ public abstract class CapsuleProfileFactory extends AbstractCapsuleFactory
         return list;
     }
     
-    protected List<String> generateEventHandlers(boolean skip) {
+    protected List<String> generateEventHandlers() {
         List<String> list = new ArrayList<String>();
         
         for (Procedure p : capsule.getEventHandlers()) {
-            List<String> source;
-            if (skip) {
-                source = Source.lines(
-                        "@Override",
-                        "public void #0(PaniniEventExecution ex, #1) {",
-                        "}",
-                        "");
-            }
-            else {
-                source = Source.lines(
-                        "@Override",
-                        "public void #0(PaniniEventExecution<#2> ex, #1) {",
-                        "    PaniniEventMessage<#2> panini$message = null;",
-                        "    panini$message = new PaniniEventMessage<>(#4, ex, #3);",
-                        "    panini$push(panini$message);",
-                        "}",
-                        "");
-            }
-            
-            Variable param = p.getParameters().get(0);
-            String argDeclString = param.toString();
-            list.addAll(Source.formatAll(source,
-                    p.getName(),
-                    argDeclString,
-                    param.getMirror().toString(),
-                    param.getIdentifier(),
-                    generateProcedureID(p)));
+            list.addAll(generateEventHandler(p));
         }
         
         return list;
+    }
+
+    protected List<String> generateEventHandler(Procedure handler) {
+        List<String> source = null;
+
+        source = Source.lines(
+                    "@Override",
+                    "public void #0(PaniniEventExecution<#2> ex, #1) {",
+                    "    PaniniEventMessage<#2> panini$message = null;",
+                    "    panini$message = new PaniniEventMessage<>(#4, ex, #3);",
+                    "    panini$push(panini$message);",
+                    "}",
+                    "");
+
+        Variable param = handler.getParameters().get(0);
+        String argDeclString = param.toString();
+        source = Source.formatAll(source,
+                handler.getName(),
+                argDeclString,
+                param.getMirror().toString(),
+                param.getIdentifier(),
+                generateProcedureID(handler));
+
+        return source;
     }
 
     protected List<String> generateConstructor() {
